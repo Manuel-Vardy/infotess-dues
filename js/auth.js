@@ -9,6 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const email = document.getElementById('adminEmail').value;
             const password = document.getElementById('adminPassword').value;
             
+            // Check if CONFIG exists
+            if (typeof CONFIG === 'undefined') {
+                console.error('System Error: Configuration not found. Please set environment variables on Vercel.');
+                alert('System Error: Application not properly configured. Check your Vercel settings.');
+                return;
+            }
+            
             // Simple validation (values from config.js)
             if (email === CONFIG.ADMIN_EMAIL && password === CONFIG.ADMIN_PASSWORD) {
                 localStorage.setItem('userType', 'admin');
