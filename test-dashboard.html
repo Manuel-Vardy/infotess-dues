@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="card">
+            <div class="card-header">
+                <h3>Dashboard Test</h3>
+            </div>
+            <div class="p-3">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card bg-primary text-white">
+                            <div class="p-3">
+                                <h6>Total Revenue</h6>
+                                <h2 id="totalRevenue">Loading...</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="p-3">
+                                <h6>Total Students</h6>
+                                <h2 id="totalStudents">Loading...</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="p-3">
+                                <h6>Payments Today</h6>
+                                <h2 id="paymentsToday">Loading...</h2>
+                                <small id="todayAmount">Loading...</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="p-3">
+                                <h6>Outstanding</h6>
+                                <h2 id="outstandingCount">Loading...</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <button class="btn btn-primary-modern" onclick="testUpdate()">Test Update</button>
+                    <button class="btn btn-secondary" onclick="loadDemoData()">Load Demo Data</button>
+                    <button class="btn btn-warning" onclick="clearData()">Clear Data</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Recent Payments</h5>
+                    </div>
+                    <div class="p-3">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Index</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentPayments">
+                                <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <h6>Debug Info:</h6>
+                    <pre id="debugInfo">Loading...</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Include the same functions from admin.js
+        function getStudents() {
+            const students = localStorage.getItem('students');
+            return students ? JSON.parse(students) : [];
+        }
+
+        function getPayments() {
+            const payments = localStorage.getItem('payments');
+            return payments ? JSON.parse(payments) : [];
+        }
+
+        function updateDashboardStats() {
+            console.log('updateDashboardStats called');
+            
+            const students = getStudents();
+            const payments = getPayments();
+            
+            console.log('Data loaded:', { students: students.length, payments: payments.length });
+            
+            // Total revenue
+            const totalRevenue = payments.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
+            document.getElementById('totalRevenue').textContent = `GH₵ ${totalRevenue.toFixed(2)}`;
+            
+            // Total students
+            document.getElementById('totalStudents').textContent = students.length;
+            
+            // Payments today
+            const today = new Date().toDateString();
+            const todayPayments = payments.filter(p => new Date(p.date).toDateString() === today);
+            const todayAmount = todayPayments.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
+            
+            document.getElementById('paymentsToday').textContent = todayPayments.length;
+            document.getElementById('todayAmount').textContent = `GH₵ ${todayAmount.toFixed(2)}`;
+            
+            // Outstanding
+            const paidStudents = [...new Set(payments.map(p => p.indexNumber))];
+            const outstanding = students.length - paidStudents.length;
+            document.getElementById('outstandingCount').textContent = outstanding;
+            
+            // Debug info
+            document.getElementById('debugInfo').textContent = JSON.stringify({
+                studentsCount: students.length,
+                paymentsCount: payments.length,
+                totalRevenue: totalRevenue,
+                todayPayments: todayPayments.length,
+                outstanding: outstanding,
+                sampleStudent: students[0] || 'None',
+                samplePayment: payments[0] || 'None'
+            }, null, 2);
+        }
+
+        function loadRecentPayments() {
+            const payments = getPayments();
+            const students = getStudents();
+            const tbody = document.getElementById('recentPayments');
+            
+            tbody.innerHTML = '';
+            
+            if (payments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No payments recorded yet</td></tr>';
+                return;
+            }
+            
+            // Get last 5 payments
+            const recentPayments = payments.slice(-5).reverse();
+            
+            recentPayments.forEach(payment => {
+                const student = students.find(s => s.indexNumber === payment.indexNumber);
+                const studentName = student ? student.fullName : 'Unknown Student';
+                
+                const row = `
+                    <tr>
+                        <td>${studentName}</td>
+                        <td>${payment.indexNumber}</td>
+                        <td>GH₵ ${parseFloat(payment.amount || 0).toFixed(2)}</td>
+                        <td>${payment.paymentMethod || 'Unknown'}</td>
+                        <td>${new Date(payment.date).toLocaleDateString()}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function testUpdate() {
+            console.log('Test update clicked');
+            updateDashboardStats();
+            loadRecentPayments();
+        }
+
+        function loadDemoData() {
+            // Load demo data
+            const demoStudents = [
+                { id: '1', fullName: 'John Doe', indexNumber: 'ICT/2024/001', level: '100', class: 'A', department: 'ICT', email: 'john@test.com', phone: '+233 24 123 4567', dateAdded: new Date().toISOString() },
+                { id: '2', fullName: 'Jane Smith', indexNumber: 'ICT/2024/002', level: '200', class: 'B', department: 'ICT', email: 'jane@test.com', phone: '+233 24 234 5678', dateAdded: new Date().toISOString() }
+            ];
+            
+            const demoPayments = [
+                { id: '1001', receiptNumber: 'RCP2026001', indexNumber: 'ICT/2024/001', amount: '150', academicYear: '2025/2026', semester: 'Semester 1', paymentMethod: 'Mobile Money', date: new Date().toISOString() },
+                { id: '1002', receiptNumber: 'RCP2026002', indexNumber: 'ICT/2024/002', amount: '150', academicYear: '2025/2026', semester: 'Semester 1', paymentMethod: 'Cash', date: new Date().toISOString() }
+            ];
+            
+            localStorage.setItem('students', JSON.stringify(demoStudents));
+            localStorage.setItem('payments', JSON.stringify(demoPayments));
+            
+            alert('Demo data loaded!');
+            testUpdate();
+        }
+
+        function clearData() {
+            localStorage.removeItem('students');
+            localStorage.removeItem('payments');
+            alert('Data cleared!');
+            testUpdate();
+        }
+
+        // Initialize
+        window.addEventListener('load', function() {
+            setTimeout(testUpdate, 100);
+        });
+    </script>
+</body>
+</html>

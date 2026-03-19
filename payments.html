@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/logo-styles.css">
+</head>
+<body>
+    <div class="main-wrapper">
+        <nav class="modern-sidebar">
+            <div class="sidebar-brand text-center">
+                <img src="images/infotess logo copy.png" alt="Infotess Logo" style="height: 50px; margin-bottom: 10px;">
+                <h4 class="mb-0 fw-bold" style="font-size: 1.2rem; letter-spacing: 1px;">INFOTESS</h4>
+            </div>
+            <div class="sidebar-nav">
+                <a class="nav-link" href="admin-dashboard.html"><i class="bi bi-grid-fill"></i> Dashboard</a>
+                <a class="nav-link" href="students.html"><i class="bi bi-person-fill"></i> Students</a>
+                <a class="nav-link active" href="payments.html"><i class="bi bi-cash-stack"></i> Payments</a>
+                <a class="nav-link" href="reports.html"><i class="bi bi-file-earmark-bar-graph-fill"></i> Reports</a>
+                <a class="nav-link" href="settings.html"><i class="bi bi-gear-fill"></i> Settings</a>
+            </div>
+            <div class="sidebar-footer">
+                <a class="nav-link text-white opacity-75" href="#" onclick="logout()">
+                    <i class="bi bi-power"></i> Logout
+                </a>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <header class="modern-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">Payment Management</h3>
+                        <p class="text-muted mb-0">Record and manage student payments</p>
+                    </div>
+                    <button class="btn btn-primary-modern" data-bs-toggle="modal" data-bs-target="#recordPaymentModal">
+                        <i class="bi bi-plus-circle"></i> Record Payment
+                    </button>
+                </div>
+            </header>
+
+            <div class="container-fluid">
+                <div class="row g-3 mb-3">
+                    <div class="col-6 col-md-3">
+                        <div class="card stat-card bg-success text-white">
+                            <div class="p-2">
+                                <h6 class="mb-1">Today's Collection</h6>
+                                <h2 class="mb-0" id="todayCollection">GH₵ 0</h2>
+                                <small id="todayCount">0 payments</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card stat-card">
+                            <div class="p-2">
+                                <h6 class="text-muted mb-1">Total Payments</h6>
+                                <h2 class="mb-0" id="totalPayments">0</h2>
+                                <small class="text-muted">All time</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card stat-card">
+                            <div class="p-2">
+                                <h6 class="text-muted mb-1">Total Revenue</h6>
+                                <h2 class="mb-0" id="totalRevenue">GH₵ 0</h2>
+                                <small class="text-muted">All time</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="card stat-card">
+                            <div class="p-2">
+                                <h6 class="text-muted mb-1">Avg Payment</h6>
+                                <h2 class="mb-0" id="avgPayment">GH₵ 0</h2>
+                                <small class="text-muted">Per transaction</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modern-card">
+                    <div class="p-3 border-bottom bg-white">
+                        <div class="row align-items-center">
+                            <div class="col-md-4">
+                                <h5 class="mb-0">All Payments</h5>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <input type="search" class="form-control-modern" id="searchPayment" placeholder="Search by name or index...">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control-modern" id="filterYear">
+                                            <option value="">All Years</option>
+                                            <option value="2025/2026">2025/2026</option>
+                                            <option value="2024/2025">2024/2025</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control-modern" id="filterMethod">
+                                            <option value="">All Methods</option>
+                                            <option value="Mobile Money">Mobile Money</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Bank Transfer">Bank Transfer</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modern-table">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Receipt No.</th>
+                                        <th>Student</th>
+                                        <th>Index No.</th>
+                                        <th>Amount</th>
+                                        <th>Year</th>
+                                        <th>Semester</th>
+                                        <th>Method</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="paymentsTable">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Record Payment Modal -->
+    <div class="modal fade" id="recordPaymentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="border-radius: 16px; border: none;">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-color);">
+                    <h5 class="modal-title">Record New Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="recordPaymentForm">
+                        <div class="mb-3">
+                            <label class="form-label">Student Index Number *</label>
+                            <input type="text" class="form-control-modern" id="paymentIndexNumber" placeholder="ICT/2024/001" required>
+                            <div id="studentInfo" class="mt-2"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Amount (GH₵) *</label>
+                            <input type="number" class="form-control-modern" id="paymentAmount" placeholder="150.00" step="0.01" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Academic Year *</label>
+                                <select class="form-control-modern" id="paymentYear" required>
+                                    <option value="2025/2026">2025/2026</option>
+                                    <option value="2024/2025">2024/2025</option>
+                                    <option value="2023/2024">2023/2024</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Semester *</label>
+                                <select class="form-control-modern" id="paymentSemester" required>
+                                    <option value="Semester 1">Semester 1</option>
+                                    <option value="Semester 2">Semester 2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Payment Method *</label>
+                            <select class="form-control-modern" id="paymentMethod" required>
+                                <option value="Mobile Money">Mobile Money</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Record Payment & Generate Receipt</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/email-service.js"></script>
+    <script src="js/payments.js"></script>
+</body>
+</html>

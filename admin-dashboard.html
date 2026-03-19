@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/logo-styles.css">
+</head>
+<body>
+    <div class="main-wrapper">
+        <nav class="modern-sidebar">
+            <div class="sidebar-brand text-center">
+                <img src="images/infotess logo copy.png" alt="Infotess Logo" style="height: 50px; margin-bottom: 10px;">
+                <h4 class="mb-0 fw-bold" style="font-size: 1.2rem; letter-spacing: 1px;">INFOTESS</h4>
+            </div>
+            <div class="sidebar-nav">
+                <a class="nav-link active" href="#"><i class="bi bi-grid-fill"></i> Dashboard</a>
+                <a class="nav-link" href="students.html"><i class="bi bi-person-fill"></i> Students</a>
+                <a class="nav-link" href="payments.html"><i class="bi bi-cash-stack"></i> Payments</a>
+                <a class="nav-link" href="reports.html"><i class="bi bi-file-earmark-bar-graph-fill"></i> Reports</a>
+                <a class="nav-link" href="settings.html"><i class="bi bi-gear-fill"></i> Settings</a>
+            </div>
+            <div class="sidebar-footer">
+                <a class="nav-link text-white opacity-75" href="#" onclick="logout()">
+                    <i class="bi bi-power"></i> Logout
+                </a>
+                <small class="d-block text-center mt-2 opacity-50">Admin Panel v2.0</small>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <header class="modern-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="images/cropped-AAMUSTED-NEW-LOGO-26-768x221.png" alt="University Logo" style="height: 50px;">
+                        <div>
+                            <h3 class="mb-0">Department Dues</h3>
+                            <p class="text-muted mb-0">Welcome back, <span class="text-primary fw-bold">Admin</span></p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="header-search d-none d-lg-block">
+                            <i class="bi bi-search"></i>
+                            <input type="search" class="form-control-modern" placeholder="Search data...">
+                        </div>
+                        <div class="header-user">
+                            <i class="bi bi-bell-fill fs-5 text-muted"></i>
+                            <div class="user-avatar ms-2">A</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="container-fluid p-0">
+                <!-- Big Top Card -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <div class="d-flex align-items-center gap-4">
+                                        <div class="stat-icon revenue" style="width: 80px; height: 80px; font-size: 2rem;">
+                                            <i class="bi bi-wallet2"></i>
+                                        </div>
+                                        <div>
+                                            <h1 class="display-4 fw-bold mb-1" id="totalRevenue">GH₵ 0</h1>
+                                            <p class="stat-label fs-5">Total Revenue Collected</p>
+                                            <span class="badge bg-success-modern">Stable Growth</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-end d-none d-md-block">
+                                    <div class="text-muted">
+                                        <p class="mb-1">Last Updated</p>
+                                        <h5 class="fw-bold" id="lastUpdated">Just now</h5>
+                                        <div class="mt-3">
+                                            <i class="bi bi-star-fill text-warning"></i>
+                                            <i class="bi bi-star-fill text-warning"></i>
+                                            <i class="bi bi-star-fill text-warning"></i>
+                                            <i class="bi bi-star-fill text-warning"></i>
+                                            <i class="bi bi-star-half text-warning"></i>
+                                            <span class="ms-1 fw-bold">4.5 Rating</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Table -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="modern-table pb-3">
+                            <div class="d-flex justify-content-between align-items-center p-4">
+                                <h5 class="fw-bold mb-0">Recent Transactions</h5>
+                                <button class="btn btn-primary-modern btn-sm" data-bs-toggle="modal" data-bs-target="#recordPaymentModal">
+                                    <i class="bi bi-plus-lg"></i> New Payment
+                                </button>
+                            </div>
+                            <div class="table-responsive px-4">
+                                <table class="table table-hover border-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="border-0">Student</th>
+                                            <th class="border-0 text-center">Amount</th>
+                                            <th class="border-0 text-center">Status</th>
+                                            <th class="border-0 text-end">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentPayments">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <!-- Record Payment Modal -->
+    <div class="modal fade" id="recordPaymentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="border-radius: 16px; border: none;" style="border-radius: 16px; border: none;">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-color);" style="border-bottom: 1px solid var(--border-color);">
+                    <h5 class="modal-title">Record New Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="recordPaymentForm">
+                        <div class="mb-3">
+                            <label class="form-label">Student Index Number</label>
+                            <input type="text" class="form-control-modern" placeholder="ICT/2024/001" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Amount (GH₵)</label>
+                            <input type="number" class="form-control-modern" placeholder="150.00" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Academic Year</label>
+                                <select class="form-control-modern" required>
+                                    <option>2025/2026</option>
+                                    <option>2024/2025</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Semester</label>
+                                <select class="form-control-modern" required>
+                                    <option>Semester 1</option>
+                                    <option>Semester 2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Payment Method</label>
+                            <select class="form-control-modern" required>
+                                <option>Mobile Money</option>
+                                <option>Cash</option>
+                                <option>Bank Transfer</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary-modern w-100">Record Payment & Generate Receipt</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+    
+    <script>
+        // Debug dashboard loading
+        console.log('Dashboard page loaded');
+        
+        // Force update after a short delay to ensure DOM is ready
+        setTimeout(function() {
+            console.log('Forcing dashboard update...');
+            if (typeof updateDashboardStats === 'function') {
+                updateDashboardStats();
+            } else {
+                console.error('updateDashboardStats function not found');
+            }
+            
+            if (typeof loadRecentPayments === 'function') {
+                loadRecentPayments();
+            } else {
+                console.error('loadRecentPayments function not found');
+            }
+        }, 500);
+        
+        // Add manual refresh button for testing
+        function manualRefresh() {
+            console.log('Manual refresh triggered');
+            updateDashboardStats();
+            loadRecentPayments();
+        }
+        
+        // Add refresh button to page
+        window.addEventListener('load', function() {
+            const header = document.querySelector('header .d-flex');
+            if (header) {
+                const refreshBtn = document.createElement('button');
+                refreshBtn.className = 'btn btn-outline-modern ms-2';
+                refreshBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Refresh';
+                refreshBtn.onclick = manualRefresh;
+                header.appendChild(refreshBtn);
+            }
+        });
+    </script>
+</body>
+</html>
