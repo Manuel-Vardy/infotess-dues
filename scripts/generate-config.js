@@ -23,8 +23,8 @@ function loadEnv(envPath) {
 const localEnv = loadEnv(path.resolve(__dirname, '../.env'));
 
 const config = {
-    ADMIN_EMAIL: process.env.ADMIN_EMAIL || localEnv.ADMIN_EMAIL || 'admin@example.com',
-    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || localEnv.ADMIN_PASSWORD || 'password',
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL || localEnv.ADMIN_EMAIL || 'vardy@gmail.com',
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || localEnv.ADMIN_PASSWORD || 'vardy',
     BREVO_API_KEY: process.env.BREVO_API_KEY || localEnv.BREVO_API_KEY || 'YOUR_BREVO_API_KEY_HERE',
     BREVO_API_URL: process.env.BREVO_API_URL || localEnv.BREVO_API_URL || 'https://api.brevo.com/v3/smtp/email',
     SENDER_EMAIL: process.env.SENDER_EMAIL || localEnv.SENDER_EMAIL || 'sender@example.com',
