@@ -9,11 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const email = document.getElementById('adminEmail').value;
             const password = document.getElementById('adminPassword').value;
             
-            // Simple validation (now moved to .env)
-            const DEFAULT_EMAIL = 'YOUR_ADMIN_EMAIL'; 
-            const DEFAULT_PASSWORD = 'YOUR_ADMIN_PASSWORD'; 
-            
-            if (email === DEFAULT_EMAIL && password === DEFAULT_PASSWORD) {
+            // Simple validation (values from config.js)
+            if (email === CONFIG.ADMIN_EMAIL && password === CONFIG.ADMIN_PASSWORD) {
                 localStorage.setItem('userType', 'admin');
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('adminEmail', email);

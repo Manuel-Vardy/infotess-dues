@@ -1,15 +1,14 @@
 // Brevo Email Service Integration
-// Replace these with your actual keys (now moved to .env)
-const BREVO_API_KEY = 'YOUR_BREVO_API_KEY'; 
-const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
+const BREVO_API_KEY = CONFIG.BREVO_API_KEY; 
+const BREVO_API_URL = CONFIG.BREVO_API_URL;
 
 // Email configuration
 const EMAIL_CONFIG = {
-    senderEmail: 'YOUR_VERIFIED_SENDER_EMAIL', 
-    senderName: 'AAMUSTED - Infotess IT Department',
-    schoolName: 'AAMUSTED - Infotess',
-    schoolAddress: 'usted.edu.gh, Kumasi, Ghana',
-    schoolPhone: '+233 24 091 8031'
+    senderEmail: CONFIG.SENDER_EMAIL, 
+    senderName: CONFIG.SENDER_NAME,
+    schoolName: CONFIG.SCHOOL_NAME,
+    schoolAddress: CONFIG.SCHOOL_ADDRESS,
+    schoolPhone: CONFIG.SCHOOL_PHONE
 };
 
 /**
